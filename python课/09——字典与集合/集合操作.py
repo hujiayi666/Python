@@ -1,0 +1,12 @@
+#假设两个集合a={1,2,3,4,5}，b={2,4,6}
+a={1,2,3,4,5}
+b={2,4,6}
+#（1）属于集合a但不属于集合b的元素
+set1=a.difference(b)
+print(f"属于集合a但不属于集合b的元素为{set1}")
+#（2）同时属于集合a和集合b的元素
+set2=a.intersection(b)
+print(f"同时属于集合a和集合b的元素为{set2}")
+#至少属于a或b之一的元素
+set3=a.union(b)
+print(f"至少属于a或b之一的元素为{set3}")

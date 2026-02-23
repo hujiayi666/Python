@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<title>图书管理系统</title>
+</head>
+<body>
+
+<h2>📚 图书管理系统</h2>
+
+<button onclick="loadBooks()">浏览书籍</button>
+<button onclick="sortBooks()">按ID排序</button>
+
+<hr>
+
+<h3>登记书籍</h3>
+<input placeholder="ID" id="id">
+<input placeholder="名称" id="name">
+<input placeholder="价格" id="price">
+<input placeholder="数量" id="number">
+<button onclick="register()">登记</button>
+
+<hr>
+
+<h3>借 / 还 / 查 / 删</h3>
+<input placeholder="书籍ID" id="opid">
+<input placeholder="数量" id="count">
+<button onclick="borrow()">借书</button>
+<button onclick="ret()">还书</button>
+<button onclick="search()">查找</button>
+<button onclick="del()">删除</button>
+
+<pre id="output"></pre>
+
+<script>
+const api = "http://127.0.0.1:5000";
+
+function loadBooks() {
+    fetch(api + "/books").then(r=>r.json()).then(d=>{
+        output.textContent = JSON.stringify(d,null,2);
+    });
+}
+function register() {
+    fetch(api + "/register", {
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({
+            id:id.value,
+            name:name.value,
+            price:+price.value,
+            number:+number.value
+        })
+    }).then(r=>r.json()).then(alertMsg);
+}
+function borrow() {
+    fetch(api + "/borrow", {
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({id:opid.value,count:+count.value})
+    }).then(r=>r.json()).then(alertMsg);
+}
+function ret() {
+    fetch(api + "/return", {
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({id:opid.value,count:+count.value})
+    }).then(r=>r.json()).then(alertMsg);
+}
+function search() {
+    fetch(api + "/search/" + opid.value)
+    .then(r=>r.json()).then(d=>{
+        output.textContent = JSON.stringify(d,null,2);
+    });
+}
+function del() {
+    fetch(api + "/delete/" + opid.value,{method:"DELETE"})
+    .then(r=>r.json()).then(alertMsg);
+}
+function sortBooks() {
+    fetch(api + "/sort?order=asc")
+    .then(r=>r.json()).then(d=>{
+        output.textContent = JSON.stringify(d,null,2);
+    });
+}
+function alertMsg(d){ alert(d.msg); }
+</script>
+
+</body>
+</html>
